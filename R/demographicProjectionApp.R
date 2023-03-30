@@ -1,10 +1,14 @@
 
-#' Title
+#' Run the Bayesian caribou demographic projection app
 #'
-#' @return
+#' The app will launch in the browser.
+#'
+#' @return The app will launch in the browser
 #' @export
 #'
 #' @examples
+#' demographicProjectionApp()
+#'
 #' @import caribouMetrics shiny dplyr shinydashboard
 #'
 demographicProjectionApp <- function(n = 1000) {
@@ -601,7 +605,7 @@ $( document ).ready(function() {
     dataInput1 <- eventReactive(input$Run.model, {
       out <- dataInput()
 
-      return(getOutputTables(
+      return(caribouMetrics:::getOutputTables(
         result = out$result, startYear = out$startYear, endYear = out$endYear,
         survInput = out$survInput, oo = out$oo, simBig = simBig(), getKSDists = input$getKSDists
       ))
@@ -617,7 +621,7 @@ $( document ).ready(function() {
     })
 
     dataInput2 <- eventReactive(input$Run.model, {
-      df <- getSumStats("S.annual.KM", dataInput()$result, dataInput()$startYear, dataInput()$endYear)
+      df <- caribouMetrics:::getSumStats("S.annual.KM", dataInput()$result, dataInput()$startYear, dataInput()$endYear)
 
       names(df)[3] <- "Survival"
 
@@ -629,7 +633,7 @@ $( document ).ready(function() {
     })
 
     dataInput3 <- eventReactive(input$Run.model, {
-      getSumStats("R", dataInput()$result, dataInput()$startYear, dataInput()$endYear)
+      caribouMetrics:::getSumStats("R", dataInput()$result, dataInput()$startYear, dataInput()$endYear)
     })
 
     output$table3 <- renderTable({
@@ -637,7 +641,7 @@ $( document ).ready(function() {
     })
 
     dataInput4 <- eventReactive(input$Run.model, {
-      getSumStats("Rfemale", dataInput()$result, dataInput()$startYear, dataInput()$endYear)
+      caribouMetrics:::getSumStats("Rfemale", dataInput()$result, dataInput()$startYear, dataInput()$endYear)
     })
 
     output$table4 <- renderTable({
@@ -645,7 +649,7 @@ $( document ).ready(function() {
     })
 
     dataInput5 <- eventReactive(input$Run.model, {
-      getSumStats("pop.growth", dataInput()$result, dataInput()$startYear, dataInput()$endYear)
+      caribouMetrics:::getSumStats("pop.growth", dataInput()$result, dataInput()$startYear, dataInput()$endYear)
     })
 
     output$table5 <- renderTable({
@@ -653,7 +657,7 @@ $( document ).ready(function() {
     })
 
     dataInput7 <- eventReactive(input$Run.model, {
-      getSumStats("fpop.size", dataInput()$result, dataInput()$startYear, dataInput()$endYear)
+      caribouMetrics:::getSumStats("fpop.size", dataInput()$result, dataInput()$startYear, dataInput()$endYear)
     })
 
     output$table7 <- renderTable({
@@ -684,7 +688,7 @@ $( document ).ready(function() {
     # Adult female survival
     output$plot1 <- renderPlot({
       scResults <- dataInput1()
-      plotRes(scResults$rr.summary.all, "Adult female survival",
+      caribouMetrics:::plotRes(scResults$rr.summary.all, "Adult female survival",
               obs = scResults$obs.all,
               lowBound = 0.6, simRange = scResults$sim.all
       )
@@ -693,7 +697,7 @@ $( document ).ready(function() {
     # Recruitment
     output$plot2 <- renderPlot({
       scResults <- dataInput1()
-      plotRes(scResults$rr.summary.all, "Recruitment",
+      caribouMetrics:::plotRes(scResults$rr.summary.all, "Recruitment",
               obs = scResults$obs.all,
               lowBound = 0, simRange = scResults$sim.all
       )
@@ -701,13 +705,13 @@ $( document ).ready(function() {
 
     # Female-only Recruitment
     output$plot3 <- renderPlot({
-      plotRes(dataInput1()$rr.summary.all, "Female-only recruitment")
+      caribouMetrics:::plotRes(dataInput1()$rr.summary.all, "Female-only recruitment")
     })
 
     # lambda
     output$plot4 <- renderPlot({
       scResults <- dataInput1()
-      plotRes(scResults$rr.summary.all, "Population growth rate",
+      caribouMetrics:::plotRes(scResults$rr.summary.all, "Population growth rate",
               obs = scResults$obs.all,
               lowBound = 0, simRange = scResults$sim.all
       )
@@ -716,7 +720,7 @@ $( document ).ready(function() {
     # lambda
     output$plot5 <- renderPlot({
       scResults <- dataInput1()
-      plotRes(scResults$rr.summary.all, "Female population size",
+      caribouMetrics:::plotRes(scResults$rr.summary.all, "Female population size",
               obs = scResults$obs.all,
               lowBound = 0
       )
@@ -752,15 +756,15 @@ $( document ).ready(function() {
 
     output$plot7 <- renderPlot({
       scResults <- dataInput1()
-      plotRes(scResults$ksDists, "Adult female survival")
+      caribouMetrics:::plotRes(scResults$ksDists, "Adult female survival")
     })
     output$plot8 <- renderPlot({
       scResults <- dataInput1()
-      plotRes(scResults$ksDists, "Recruitment")
+      caribouMetrics:::plotRes(scResults$ksDists, "Recruitment")
     })
     output$plot9 <- renderPlot({
       scResults <- dataInput1()
-      plotRes(scResults$ksDists, "Population growth rate")
+      caribouMetrics:::plotRes(scResults$ksDists, "Population growth rate")
     })
 
     # Download output #######

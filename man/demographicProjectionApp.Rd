@@ -2,10 +2,17 @@
 % Please edit documentation in R/demographicProjectionApp.R
 \name{demographicProjectionApp}
 \alias{demographicProjectionApp}
-\title{Title}
+\title{Run the Bayesian caribou demographic projection app}
 \usage{
 demographicProjectionApp(n = 1000)
 }
+\value{
+The app will launch in the browser
+}
 \description{
-Title
+The app will launch in the browser.
+}
+\examples{
+demographicProjectionApp()
+
 }
