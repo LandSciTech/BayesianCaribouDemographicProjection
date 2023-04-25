@@ -290,7 +290,17 @@ ui <- dashboardPage(
 
         sliderInput(inputId = "Nthin", label = "Thinning rate",
                     value=jags_defaults$Nthin, min=1, max=10)
+      ),
+
+      # Display options ---------------------------
+      menuItem(
+        "Display options",
+        checkboxInput("showTruePop" , "Show true population values",value=1),
+
+        checkboxInput("showNationalBands" , "Show range of variation from national model",value=1)
+
       )
+
       # ------------------------
     ),
 
@@ -329,10 +339,11 @@ ui <- dashboardPage(
           tabPanel("Adult female survival",  plotOutput("plot1")),
           tabPanel("Population growth rate",  plotOutput("plot4")),
           tabPanel("Female population size",  plotOutput("plot5")),
-          tabPanel("Female recruitment",  plotOutput("plot3")),
-          tabPanel("Recruitment Kolmogorov-Smirnov Distance",  plotOutput("plot8")),
-          tabPanel("Adult female survival Kolmogorov-Smirnov Distance",  plotOutput("plot7")),
-          tabPanel("Population growth rate Kolmogorov-Smirnov Distance",  plotOutput("plot9"))
+          tabPanel("Female recruitment",  plotOutput("plot3"))#,
+          #TO DO: make these optional, only plotted when KS dist option is selected.
+          #tabPanel("Recruitment Kolmogorov-Smirnov Distance",  plotOutput("plot8")),
+          #tabPanel("Adult female survival Kolmogorov-Smirnov Distance",  plotOutput("plot7")),
+          #tabPanel("Population growth rate Kolmogorov-Smirnov Distance",  plotOutput("plot9"))
         ),
       ),
       tabPanel(
@@ -629,8 +640,8 @@ server <- function(input, output, session) {
   output$plot1 <- renderPlot({
 
     scResults<-dataInput1()
-    plotRes(scResults$rr.summary.all, "Adult female survival",obs=scResults$obs.all,
-            lowBound=0.6,simRange=scResults$sim.all)
+    plotRes(scResults$rr.summary.all, "Adult female survival",obs=if(input$showTruePop){scResults$obs.all}else{NULL},
+            lowBound=0.6,simRange=if(input$showNationalBands){scResults$sim.all}else{NULL})
 
   })
 
@@ -638,8 +649,8 @@ server <- function(input, output, session) {
   output$plot2 <- renderPlot({
 
     scResults<-dataInput1()
-    plotRes(scResults$rr.summary.all, "Recruitment",obs=scResults$obs.all,
-            lowBound=0,simRange=scResults$sim.all)
+    plotRes(scResults$rr.summary.all, "Recruitment",obs=if(input$showTruePop){scResults$obs.all}else{NULL},
+            lowBound=0,simRange=if(input$showNationalBands){scResults$sim.all}else{NULL})
 
   })
 
@@ -654,8 +665,8 @@ server <- function(input, output, session) {
   output$plot4 <- renderPlot({
 
     scResults<-dataInput1()
-    plotRes(scResults$rr.summary.all, "Population growth rate",obs=scResults$obs.all,
-            lowBound=0,simRange=scResults$sim.all)
+    plotRes(scResults$rr.summary.all, "Population growth rate",obs=if(input$showTruePop){scResults$obs.all}else{NULL},
+            lowBound=0,simRange=if(input$showNationalBands){scResults$sim.all}else{NULL})
 
   })
 
@@ -663,7 +674,7 @@ server <- function(input, output, session) {
   output$plot5 <- renderPlot({
 
     scResults<-dataInput1()
-    plotRes(scResults$rr.summary.all, "Female population size",obs=scResults$obs.all,
+    plotRes(scResults$rr.summary.all, "Female population size",,obs=if(input$showTruePop){scResults$obs.all}else{NULL},
             lowBound=0)
 
   })
@@ -692,24 +703,18 @@ server <- function(input, output, session) {
       ylim(0, 100)
   })
 
-  output$plot7 <- renderPlot({
-
-    scResults<-dataInput1()
-    plotRes(scResults$ksDists, "Adult female survival")
-
-  })
-  output$plot8 <- renderPlot({
-
-    scResults<-dataInput1()
-    plotRes(scResults$ksDists, "Recruitment")
-
-  })
-  output$plot9 <- renderPlot({
-
-    scResults<-dataInput1()
-    plotRes(scResults$ksDists, "Population growth rate")
-
-  })
+  #output$plot7 <- renderPlot({
+  #  scResults<-dataInput1()
+  #  plotRes(scResults$ksDists, "Adult female survival")
+  #})
+  #output$plot8 <- renderPlot({
+  #  scResults<-dataInput1()
+  #  plotRes(scResults$ksDists, "Recruitment")
+  #})
+  #output$plot9 <- renderPlot({
+  #  scResults<-dataInput1()
+  #  plotRes(scResults$ksDists, "Population growth rate")
+  #})
 
   # Download output #######
   observeEvent(input$saveOutput, {
