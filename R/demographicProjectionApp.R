@@ -609,8 +609,8 @@ $( document ).ready(function() {
       out <- dataInput()
 
       return(caribouMetrics:::getOutputTables(
-        result = out$result, startYear = out$startYear, endYear = out$endYear,
-        survInput = out$survInput, oo = out$oo, simBig = simBig(), getKSDists = input$getKSDists
+        out, startYear = out$startYear, endYear = out$endYear,
+        oo = out$oo, simBig = simBig(), getKSDists = input$getKSDists
       ))
     })
 
