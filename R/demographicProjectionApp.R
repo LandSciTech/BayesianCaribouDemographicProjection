@@ -302,7 +302,16 @@ $( document ).ready(function() {
             inputId = "Nthin", label = "Thinning rate",
             value = jags_defaults$Nthin, min = 1, max = 10
           )
+        ),
+        # Display options ---------------------------
+        menuItem(
+          "Display options",
+          checkboxInput("showTruePop" , "Show true population values",value=1),
+
+          checkboxInput("showNationalBands" , "Show range of variation from national model",value=1)
+
         )
+
         # ------------------------
       ),
       h3("Run model/Update data"),
@@ -691,19 +700,15 @@ $( document ).ready(function() {
     # Adult female survival
     output$plot1 <- renderPlot({
       scResults <- dataInput1()
-      caribouMetrics:::plotRes(scResults$rr.summary.all, "Adult female survival",
-              obs = scResults$obs.all,
-              lowBound = 0.6, simRange = scResults$sim.all
-      )
+      caribouMetrics:::plotRes(scResults$rr.summary.all, "Adult female survival",obs=if(input$showTruePop){scResults$obs.all}else{NULL},
+              lowBound=0.6,simRange=if(input$showNationalBands){scResults$sim.all}else{NULL})
     })
 
     # Recruitment
     output$plot2 <- renderPlot({
       scResults <- dataInput1()
-      caribouMetrics:::plotRes(scResults$rr.summary.all, "Recruitment",
-              obs = scResults$obs.all,
-              lowBound = 0, simRange = scResults$sim.all
-      )
+      caribouMetrics:::plotRes(scResults$rr.summary.all, "Recruitment",obs=if(input$showTruePop){scResults$obs.all}else{NULL},
+                                   lowBound=0,simRange=if(input$showNationalBands){scResults$sim.all}else{NULL})
     })
 
     # Female-only Recruitment
@@ -714,19 +719,15 @@ $( document ).ready(function() {
     # lambda
     output$plot4 <- renderPlot({
       scResults <- dataInput1()
-      caribouMetrics:::plotRes(scResults$rr.summary.all, "Population growth rate",
-              obs = scResults$obs.all,
-              lowBound = 0, simRange = scResults$sim.all
-      )
+      caribouMetrics:::plotRes(scResults$rr.summary.all, "Population growth rate",obs=if(input$showTruePop){scResults$obs.all}else{NULL},
+                               lowBound=0,simRange=if(input$showNationalBands){scResults$sim.all}else{NULL})
     })
 
     # lambda
     output$plot5 <- renderPlot({
       scResults <- dataInput1()
-      caribouMetrics:::plotRes(scResults$rr.summary.all, "Female population size",
-              obs = scResults$obs.all,
-              lowBound = 0
-      )
+      caribouMetrics:::plotRes(scResults$rr.summary.all, "Female population size",,obs=if(input$showTruePop){scResults$obs.all}else{NULL},
+                               lowBound=0)
     })
 
     output$plot6 <- renderPlot({
