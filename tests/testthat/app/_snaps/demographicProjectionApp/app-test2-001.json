@@ -6,46 +6,48 @@
     "Niter": 100,
     "Nthin": 2,
     "Run.model": 1,
-    "aS": 0,
-    "aSf": 4,
     "adjustR": true,
     "bodyTabs": "Graphical summary",
-    "bre": 4,
-    "bse": 3,
-    "cmult": 1,
+    "collarCount": 10,
+    "collarInterval": 1,
     "collarNumYears": 6,
     "collarOffTime": 12,
     "collarOnTime": 1,
+    "cowMult": 1,
     "curYear": 2023,
     "getKSDists": true,
-    "graphPanel": "Population growth rate Kolmogorov-Smirnov Distance",
-    "iA": 0,
-    "iF": 0,
-    "lre": 3,
-    "lse": 5,
+    "graphPanel": "Adult female survival",
+    "iAnthro": 0,
+    "iFire": 0,
     "mcmc.output": 0,
     "nYearObs": 10,
     "nYearProj": 20,
     "nat_model": "default",
+    "obsAnthroSlope": 0,
     "popGrowth_file": 0,
-    "rQ": 0.5,
-    "rS": 1,
+    "projAnthroSlope": 4,
+    "rAnthroSlopeSEMod": 4,
+    "rIntSEMod": 3,
+    "rInterannualVar": 0.23,
+    "rInterannualVarSE": 0.22,
+    "rQuantile": 0.5,
+    "rSlopeMod": 1,
     "recruitmentModelNumber": "M4",
     "redoSimsNational": false,
-    "renewalInterval": 1,
-    "sQ": 0.5,
-    "sS": 1,
+    "sAnthroSlopeSEMod": 3,
+    "sIntSEMod": 5,
+    "sInterannualVar": 0.034784,
+    "sInterannualVarSE": 0.03,
+    "sQuantile": 0.5,
+    "sSlopeMod": 1,
     "saveOutput": 0,
     "scn_file": 0,
     "scn_source": "sim",
+    "showNationalBands": true,
+    "showTruePop": true,
     "sideBar": null,
     "sidebarCollapsed": false,
     "sidebarItemExpanded": null,
-    "sre": 0.23,
-    "srv": 0.22,
-    "sse": 0.034784,
-    "ssv": 0.03,
-    "startsPerYear": 10,
     "survAnalysisMethod": "KaplanMeier",
     "survivalModelNumber": "M1",
     "tablePanel": "Summary",
@@ -54,7 +56,7 @@
   },
   "output": {
     "plot1": {
-      "src": "[image data hash: 462a974033f3a158ee3b59b12007f0ce]",
+      "src": "[image data hash: 841ae86c31d48fdee47dca56fffe1e10]",
       "width": 532,
       "height": 400,
       "alt": "Plot object",
@@ -98,7 +100,7 @@
       }
     },
     "plot2": {
-      "src": "[image data hash: 409a3f0bf2c64f3d497658f664947ac5]",
+      "src": "[image data hash: 5a449637ec44d3752c9abd1c4f526370]",
       "width": 532,
       "height": 400,
       "alt": "Plot object",
@@ -204,132 +206,6 @@
               "right": 526.520547945206,
               "bottom": 340.724315068493,
               "top": 27.2465753424658
-            }
-          }
-        ],
-        "dims": {
-          "width": 532,
-          "height": 400
-        }
-      }
-    },
-    "plot7": {
-      "src": "[image data hash: d6f930f40217c0ea2939cbb97972cb95]",
-      "width": 532,
-      "height": 400,
-      "alt": "Plot object",
-      "coordmap": {
-        "panels": [
-          {
-            "panel": 1,
-            "row": 1,
-            "col": 1,
-            "panel_vars": {
-
-            },
-            "log": {
-              "x": null,
-              "y": null
-            },
-            "domain": {
-              "left": 2012.55,
-              "right": 2044.45,
-              "bottom": 0.1498,
-              "top": 0.621088888888889
-            },
-            "mapping": {
-              "x": "Year",
-              "y": "Mean"
-            },
-            "range": {
-              "left": 47.6038099315069,
-              "right": 526.520547945205,
-              "bottom": 340.724315068493,
-              "top": 5.47945205479452
-            }
-          }
-        ],
-        "dims": {
-          "width": 532,
-          "height": 400
-        }
-      }
-    },
-    "plot8": {
-      "src": "[image data hash: e80e855c5d405eeec9e7db6f020d028f]",
-      "width": 532,
-      "height": 400,
-      "alt": "Plot object",
-      "coordmap": {
-        "panels": [
-          {
-            "panel": 1,
-            "row": 1,
-            "col": 1,
-            "panel_vars": {
-
-            },
-            "log": {
-              "x": null,
-              "y": null
-            },
-            "domain": {
-              "left": 2012.55,
-              "right": 2044.45,
-              "bottom": 0.127988888888889,
-              "top": 0.348233333333333
-            },
-            "mapping": {
-              "x": "Year",
-              "y": "Mean"
-            },
-            "range": {
-              "left": 55.3850599315069,
-              "right": 526.520547945205,
-              "bottom": 340.724315068493,
-              "top": 5.47945205479452
-            }
-          }
-        ],
-        "dims": {
-          "width": 532,
-          "height": 400
-        }
-      }
-    },
-    "plot9": {
-      "src": "[image data hash: f08191e294c52e04273593338f9be357]",
-      "width": 532,
-      "height": 400,
-      "alt": "Plot object",
-      "coordmap": {
-        "panels": [
-          {
-            "panel": 1,
-            "row": 1,
-            "col": 1,
-            "panel_vars": {
-
-            },
-            "log": {
-              "x": null,
-              "y": null
-            },
-            "domain": {
-              "left": 2012.55,
-              "right": 2044.45,
-              "bottom": 0.0557666666666667,
-              "top": 0.584011111111111
-            },
-            "mapping": {
-              "x": "Year",
-              "y": "Mean"
-            },
-            "range": {
-              "left": 47.6038099315069,
-              "right": 526.520547945205,
-              "bottom": 340.724315068493,
-              "top": 5.47945205479452
             }
           }
         ],

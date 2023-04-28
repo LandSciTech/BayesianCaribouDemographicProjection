@@ -45,7 +45,7 @@ demographicProjectionApp <- function(n = 1000) {
   # st: target number of collars per year
   # ri: renewal interval
 
-  scn_defaults <- eval(formals(fillDefaults))
+  scn_defaults <- eval(formals(getScenarioDefaults))
 
   # Observation model parameters
   # cowsPerYear: number of cows in aerial surval for calf:cow ratio each year.
@@ -56,7 +56,7 @@ demographicProjectionApp <- function(n = 1000) {
 
   # defaults set to be uninformative
   obs_defaults <- list(
-    cmult = 1, startsPerYear = 10, renewalInterval = 1, collarNumYears = 6,
+    cowMult = 1, collarCount = 10, collarInterval = 1, collarNumYears = 6,
     collarOnTime = 1, collarOffTime = 12
   )
 
@@ -73,7 +73,7 @@ demographicProjectionApp <- function(n = 1000) {
   prior_defaults <- lapply(formals(getPriors), eval)
 
   # JAGS params
-  jags_defaults <- eval(formals(runRMModel)[c("Niter", "Nchains", "Nthin", "Nburn")])
+  jags_defaults <- eval(formals(caribouBayesianIPM)[c("Niter", "Nchains", "Nthin", "Nburn")])
 
   # add JavaScript to add an id to the <section> tag
   # so we can overlay waiter on top of it
@@ -114,30 +114,30 @@ $( document ).ready(function() {
             id = "nYears",
             numericInput("nYearObs",
               label = "Number of years of observations",
-              value = scn_defaults$P, min = 1
+              value = scn_defaults$obsYears, min = 1
             ),
             numericInput("nYearProj",
               label = "Number of years of projections",
-              value = scn_defaults$J, min = 0
+              value = scn_defaults$projYears, min = 0
             )
           ),
           div(
             id = "dist_sim",
-            numericInput("iA",
+            numericInput("iAnthro",
               label = "Initial % anthropogenic disturbance",
-              value = scn_defaults$iA, min = 0
+              value = scn_defaults$iAnthro, min = 0
             ),
-            numericInput("aS",
+            numericInput("obsAnthroSlope",
               label = "% increase in anthropogenic disturbance per year in observation period",
-              value = scn_defaults$aS, min = 0
+              value = scn_defaults$obsAnthroSlope, min = 0
             ),
-            numericInput("aSf",
+            numericInput("projAnthroSlope",
               label = "% increase in anthropogenic disturbance per year in projection period",
-              value = scn_defaults$aSf, min = 0
+              value = scn_defaults$projAnthroSlope, min = 0
             ),
-            numericInput("iF",
+            numericInput("iFire",
               label = "Initial % natural disturbance",
-              value = scn_defaults$iF, min = 0
+              value = scn_defaults$iFire, min = 0
             )
           )
         ),
@@ -150,36 +150,36 @@ $( document ).ready(function() {
             value = scn_defaults$N0, min = 0
           ),
           sliderInput(
-            inputId = "rQ", label = "Recruitment quantile",
-            value = scn_defaults$rQ, min = 0.025, max = 0.975
+            inputId = "rQuantile", label = "Recruitment quantile",
+            value = scn_defaults$rQuantile, min = 0.025, max = 0.975
           ),
           sliderInput(
-            inputId = "sQ", label = "Survival quantile",
-            value = scn_defaults$sQ, min = 0.025, max = 0.975
+            inputId = "sQuantile", label = "Survival quantile",
+            value = scn_defaults$sQuantile, min = 0.025, max = 0.975
           ),
           sliderInput(
-            inputId = "rS", label = "Multiplier for effect of disturbance on recruitment",
-            value = scn_defaults$rS, min = 0, max = 5
+            inputId = "rSlopeMod", label = "Multiplier for effect of disturbance on recruitment",
+            value = scn_defaults$rSlopeMod, min = 0, max = 5
           ),
           sliderInput(
-            inputId = "sS", label = "Multiplier for effect of disturbance on survival",
-            value = scn_defaults$sS, min = 0, max = 5
+            inputId = "sSlopeMod", label = "Multiplier for effect of disturbance on survival",
+            value = scn_defaults$sSlopeMod, min = 0, max = 5
           )
         ),
         # Obs data ---------------------------------
         menuItem(
           "Observation model parameters",
-          numericInput("startsPerYear",
+          numericInput("collarCount",
             label = "Target number of collars",
-            value = obs_defaults$startsPerYear, min = 1
+            value = obs_defaults$collarCount, min = 1
           ),
-          numericInput("renewalInterval",
+          numericInput("collarInterval",
             label = "Number of years between collar deployments",
-            value = obs_defaults$renewalInterval, min = 1
+            value = obs_defaults$collarInterval, min = 1
           ),
-          numericInput("cmult",
+          numericInput("cowMult",
             label = "Number of cows per collared cow in aerial surveys for calf:cow ratio each year",
-            value = obs_defaults$cmult, min = 0
+            value = obs_defaults$cowMult, min = 0
           ),
           numericInput("collarNumYears",
             label = "Number of years until collar falls off",
@@ -236,44 +236,44 @@ $( document ).ready(function() {
             )
           ),
           sliderInput(
-            inputId = "bse",
+            inputId = "sAnthroSlopeSEMod",
             label = "Multiplier for uncertainty of effect of disturbance on survival",
-            value = prior_defaults$bse, min = 1, max = 10
+            value = prior_defaults$sAnthroSlopeSEMod, min = 1, max = 10
           ),
           sliderInput(
-            inputId = "bre",
+            inputId = "rAnthroSlopeSEMod",
             label = "Multiplier for uncertainty of effect of disturbance on recruitment",
-            value = prior_defaults$bre, min = 1, max = 10
+            value = prior_defaults$rAnthroSlopeSEMod, min = 1, max = 10
           ),
           sliderInput(
-            inputId = "lse",
+            inputId = "sIntSEMod",
             label = "Multiplier for uncertainty of survival intercept",
-            value = prior_defaults$lse, min = 1, max = 10
+            value = prior_defaults$sIntSEMod, min = 1, max = 10
           ),
           sliderInput(
-            inputId = "lre",
+            inputId = "rIntSEMod",
             label = "Multiplier for uncertainty of recruitment intercept",
-            value = prior_defaults$lre, min = 1, max = 10
+            value = prior_defaults$rIntSEMod, min = 1, max = 10
           ),
           sliderInput(
-            inputId = "sse",
+            inputId = "sInterannualVar",
             label = "Interannual coefficient of variation for survival",
-            value = prior_defaults$sse, min = 0, max = 1
+            value = prior_defaults$sInterannualVar, min = 0, max = 1
           ),
           sliderInput(
-            inputId = "ssv",
+            inputId = "sInterannualVarSE",
             label = "Uncertainty around interannual coefficient of variation for survival",
-            value = prior_defaults$ssv, min = 0, max = 1
+            value = prior_defaults$sInterannualVarSE, min = 0, max = 1
           ),
           sliderInput(
-            inputId = "sre",
+            inputId = "rInterannualVar",
             label = "Interannual coefficient of variation for recruitment",
-            value = prior_defaults$sre, min = 0, max = 1
+            value = prior_defaults$rInterannualVar, min = 0, max = 1
           ),
           sliderInput(
-            inputId = "srv",
+            inputId = "rInterannualVarSE",
             label = "Uncertainty around interannual coefficient of variation for recruitment",
-            value = prior_defaults$srv, min = 0, max = 1
+            value = prior_defaults$rInterannualVarSE, min = 0, max = 1
           )
         ),
 
@@ -547,27 +547,27 @@ $( document ).ready(function() {
       endYear <- input$curYear + input$nYearProj
 
       scns <- expand.grid(
-        P = input$nYearObs, J = input$nYearProj,
-        aS = input$aS, aSf = input$aSf, rS = input$rS,
-        sS = input$sS, iA = input$iA, iF = input$iF,
-        rQ = input$rQ, sQ = input$sQ, N0 = input$N0,
-        iYr = startYear, adjustR = input$adjustR,
-        cmult = input$cmult, st = input$startsPerYear,
-        ri = input$renewalInterval
+        obsYears = input$nYearObs, projYears = input$nYearProj,
+        obsAnthroSlope = input$obsAnthroSlope, projAnthroSlope = input$projAnthroSlope, rSlopeMod = input$rSlopeMod,
+        sSlopeMod = input$sSlopeMod, iAnthro = input$iAnthro, iFire = input$iFire,
+        rQuantile = input$rQuantile, sQuantile = input$sQuantile, N0 = input$N0,
+        startYear = startYear, adjustR = input$adjustR,
+        cowMult = input$cowMult, collarCount = input$collarCount,
+        collarInterval = input$collarInterval
       )
 
 
-      scns <- fillDefaults(scns)
+      scns <- getScenarioDefaults(scns)
 
       # create cowCounts and freqStartsByYear from inputs
       cowCounts <- data.frame(
         Year = startYear:input$curYear,
-        Count = input$startsPerYear * input$cmult,
+        Count = input$collarCount * input$cowMult,
         Class = "cow"
       )
       freqStartsByYear <- data.frame(
         Year = startYear:input$curYear,
-        numStarts = input$startsPerYear
+        numStarts = input$collarCount
       )
       if (is.integer(input$scn_file)) {
         scn_df2 <- NULL
@@ -597,15 +597,15 @@ $( document ).ready(function() {
       )
 
       betaPriors <- getPriors(
-        modifiers = isolate(reactiveValuesToList(input)),
+        modList = isolate(reactiveValuesToList(input)),
         populationGrowthTable = popGrow_df2
       )
 
-      out <- runRMModel(
-        survData = oo$simSurvObs, ageRatio.herd = oo$ageRatioOut,
+      out <- caribouBayesianIPM(
+        survData = oo$simSurvObs, ageRatio = oo$ageRatioOut,
         disturbance = oo$simDisturbance, betaPriors = betaPriors,
         startYear = startYear, endYear = endYear,
-        inpFixed = input
+        inputList = input
       )
       out$oo <- oo
       out$startYear <- startYear
@@ -619,16 +619,14 @@ $( document ).ready(function() {
 
       return(caribouMetrics:::getOutputTables(
         out, startYear = out$startYear, endYear = out$endYear,
-        oo = out$oo, simBig = simBig(), getKSDists = input$getKSDists
+        simObsList = out$oo, simNational = simBig(), getKSDists = input$getKSDists
       ))
     })
 
     output$table <- renderDataTable({
       dataInput1()$rr.summary.all %>%
         # remove params as they are included in label
-        select(-c(.data$P, .data$J, .data$aS, .data$aSf, .data$rS, .data$sS,
-                  .data$iA, .data$iF, .data$rQ, .data$sQ, .data$N0, .data$iYr,
-                  .data$st, .data$ID)) %>%
+        select(1:"fire_excl_anthro") %>%
         mutate(across(tidyselect::where(is.numeric), ~ round(.x, 2)))
     })
 
@@ -726,7 +724,7 @@ $( document ).ready(function() {
     # lambda
     output$plot5 <- renderPlot({
       scResults <- dataInput1()
-      caribouMetrics:::plotRes(scResults$rr.summary.all, "Female population size",,obs=if(input$showTruePop){scResults$obs.all}else{NULL},
+      caribouMetrics:::plotRes(scResults$rr.summary.all, "Female population size",obs=if(input$showTruePop){scResults$obs.all}else{NULL},
                                lowBound=0)
     })
 
