@@ -355,9 +355,9 @@ $( document ).ready(function() {
             tabPanel("Population growth rate", plotOutput("plot4")),
             tabPanel("Female population size", plotOutput("plot5")),
             tabPanel("Female recruitment", plotOutput("plot3")),
-            tabPanel("Recruitment Kolmogorov-Smirnov Distance", plotOutput("plot8")),
-            tabPanel("Adult female survival Kolmogorov-Smirnov Distance", plotOutput("plot7")),
-            tabPanel("Population growth rate Kolmogorov-Smirnov Distance", plotOutput("plot9"))
+            tabPanel("Recruitment KS Distance", plotOutput("plot8")),
+            tabPanel("Adult female survival KS Distance", plotOutput("plot7")),
+            tabPanel("Population growth rate KS Distance", plotOutput("plot9"))
           ),
         ),
         tabPanel(
