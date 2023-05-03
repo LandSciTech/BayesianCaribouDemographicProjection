@@ -56,7 +56,7 @@ demographicProjectionApp <- function(n = 1000) {
 
   # defaults set to be uninformative
   obs_defaults <- list(
-    cowMult = 1, collarCount = 10, collarInterval = 1, collarNumYears = 6,
+    cowMult = 6, collarCount = 30, collarInterval = 1, collarNumYears = 6,
     collarOnTime = 1, collarOffTime = 12
   )
 
