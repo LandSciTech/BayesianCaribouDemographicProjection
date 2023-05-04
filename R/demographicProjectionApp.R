@@ -192,6 +192,10 @@ $( document ).ready(function() {
           numericInput("collarOffTime",
             label = "Month that collars fall off",
             value = obs_defaults$collarOffTime, min = 1, max = 12
+          ),
+          numericInput("assessmentYrs",
+                       label = "Number of years over which to assess lambda (growth rate)",
+                       value = 1, min = 1, max = 5
           )
         ),
         # Priors ------------------------------------------------
@@ -354,7 +358,6 @@ $( document ).ready(function() {
             tabPanel("Adult female survival", plotOutput("plot1")),
             tabPanel("Population growth rate", plotOutput("plot4")),
             tabPanel("Female population size", plotOutput("plot5")),
-            tabPanel("Female recruitment", plotOutput("plot3")),
             tabPanel("Recruitment KS Distance", plotOutput("plot8")),
             tabPanel("Adult female survival KS Distance", plotOutput("plot7")),
             tabPanel("Population growth rate KS Distance", plotOutput("plot9"))
@@ -553,7 +556,7 @@ $( document ).ready(function() {
         rQuantile = input$rQuantile, sQuantile = input$sQuantile, N0 = input$N0,
         startYear = startYear, adjustR = input$adjustR,
         cowMult = input$cowMult, collarCount = input$collarCount,
-        collarInterval = input$collarInterval
+        collarInterval = input$collarInterval,assessmentYrs=input$assessmentYrs
       )
 
 
@@ -707,11 +710,6 @@ $( document ).ready(function() {
       scResults <- dataInput1()
       caribouMetrics:::plotRes(scResults$rr.summary.all, "Recruitment",obs=if(input$showTruePop){scResults$obs.all}else{NULL},
                                    lowBound=0,simRange=if(input$showNationalBands){scResults$sim.all}else{NULL})
-    })
-
-    # Female-only Recruitment
-    output$plot3 <- renderPlot({
-      caribouMetrics:::plotRes(dataInput1()$rr.summary.all, "Female-only recruitment")
     })
 
     # lambda
