@@ -559,16 +559,6 @@ $( document ).ready(function() {
 
       scns <- getScenarioDefaults(scns)
 
-      # create cowCounts and freqStartsByYear from inputs
-      cowCounts <- data.frame(
-        Year = startYear:input$curYear,
-        Count = input$collarCount * input$cowMult,
-        Class = "cow"
-      )
-      freqStartsByYear <- data.frame(
-        Year = startYear:input$curYear,
-        numStarts = input$collarCount
-      )
       if (is.integer(input$scn_file)) {
         scn_df2 <- NULL
       } else {
@@ -586,8 +576,7 @@ $( document ).ready(function() {
       }
 
       oo <- simulateObservations(scns,
-                                 distScen = scn_df2, cowCounts = cowCounts,
-                                 freqStartsByYear = freqStartsByYear,
+                                 distScen = scn_df2,
                                  collarNumYears = input$collarNumYears,
                                  collarOffTime = input$collarOffTime,
                                  collarOnTime = input$collarOnTime,
@@ -617,9 +606,9 @@ $( document ).ready(function() {
     dataInput1 <- eventReactive(input$Run.model, {
       out <- dataInput()
 
-      return(caribouMetrics:::getOutputTables(
-        out, startYear = out$startYear, endYear = out$endYear,
-        simObsList = out$oo, simNational = simBig(), getKSDists = input$getKSDists
+      return(getOutputTables(
+        out, exData = out$oo$exData, paramTable = out$oo$paramTable,
+        simNational = simBig(), getKSDists = input$getKSDists
       ))
     })
 
@@ -694,38 +683,41 @@ $( document ).ready(function() {
 
 
     # PLOTS #######
+    modTables <- reactive({
+      req(dataInput1())
+      scResults <- dataInput1()
+      if(!input$showTruePop){
+        scResults$obs.all <- NULL
+      }
+      if(!input$showNationalBands){
+        scResults$sim.all <- NULL
+      }
+      scResults
+    })
 
     # Adult female survival
     output$plot1 <- renderPlot({
-      scResults <- dataInput1()
-      caribouMetrics:::plotRes(scResults$rr.summary.all, "Adult female survival",obs=if(input$showTruePop){scResults$obs.all}else{NULL},
-              lowBound=0.6,simRange=if(input$showNationalBands){scResults$sim.all}else{NULL})
+      plotRes(modTables(), "Adult female survival", lowBound=0.6)
     })
 
     # Recruitment
     output$plot2 <- renderPlot({
-      scResults <- dataInput1()
-      caribouMetrics:::plotRes(scResults$rr.summary.all, "Recruitment",obs=if(input$showTruePop){scResults$obs.all}else{NULL},
-                                   lowBound=0,simRange=if(input$showNationalBands){scResults$sim.all}else{NULL})
+      plotRes(modTables(), "Recruitment", lowBound=0)
     })
 
     # Female-only Recruitment
     output$plot3 <- renderPlot({
-      caribouMetrics:::plotRes(dataInput1()$rr.summary.all, "Female-only recruitment")
+      plotRes(modTables(), "Female-only recruitment")
     })
 
     # lambda
     output$plot4 <- renderPlot({
-      scResults <- dataInput1()
-      caribouMetrics:::plotRes(scResults$rr.summary.all, "Population growth rate",obs=if(input$showTruePop){scResults$obs.all}else{NULL},
-                               lowBound=0,simRange=if(input$showNationalBands){scResults$sim.all}else{NULL})
+      plotRes(modTables(), "Population growth rate", lowBound=0)
     })
 
     # lambda
     output$plot5 <- renderPlot({
-      scResults <- dataInput1()
-      caribouMetrics:::plotRes(scResults$rr.summary.all, "Female population size",obs=if(input$showTruePop){scResults$obs.all}else{NULL},
-                               lowBound=0)
+      plotRes(modTables(), "Female population size", lowBound=0)
     })
 
     output$plot6 <- renderPlot({
@@ -758,15 +750,15 @@ $( document ).ready(function() {
 
     output$plot7 <- renderPlot({
       scResults <- dataInput1()
-      caribouMetrics:::plotRes(scResults$ksDists, "Adult female survival")
+      plotRes(scResults, ksDists = TRUE, "Adult female survival")
     })
     output$plot8 <- renderPlot({
       scResults <- dataInput1()
-      caribouMetrics:::plotRes(scResults$ksDists, "Recruitment")
+      plotRes(scResults, ksDists = TRUE, "Recruitment")
     })
     output$plot9 <- renderPlot({
       scResults <- dataInput1()
-      caribouMetrics:::plotRes(scResults$ksDists, "Population growth rate")
+      plotRes(scResults, ksDists = TRUE, "Population growth rate")
     })
 
     # Download output #######
