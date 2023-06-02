@@ -25,3 +25,4 @@ Imports:
 Suggests: 
     shinytest2,
     testthat
+Remotes: LandSciTech/caribouMetrics
