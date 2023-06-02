@@ -604,12 +604,22 @@ $( document ).ready(function() {
 
     # TABLES #######
     dataInput1 <- eventReactive(input$Run.model, {
-      out <- dataInput()
 
-      return(getOutputTables(
+      out <- dataInput()
+      if(input$getKSDists){
+        waiter$show()
+        waiter$update(html = tagList(
+          waiter::spin_1(),
+          h4("Calculating Kolmogorov-Smirnov distances...")
+        ))
+        on.exit(waiter$hide())
+      }
+
+      getOutputTables(
         out, exData = out$oo$exData, paramTable = out$oo$paramTable,
         simNational = simBig(), getKSDists = input$getKSDists
-      ))
+      )
+
     })
 
     output$table <- renderDataTable({
