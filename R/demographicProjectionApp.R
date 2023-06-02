@@ -56,7 +56,7 @@ demographicProjectionApp <- function(n = 1000) {
 
   # defaults set to be uninformative
   obs_defaults <- list(
-    cowMult = 1, collarCount = 10, collarInterval = 1, collarNumYears = 6,
+    cowMult = 6, collarCount = 30, collarInterval = 1, collarNumYears = 6,
     collarOnTime = 1, collarOffTime = 12
   )
 
@@ -192,6 +192,10 @@ $( document ).ready(function() {
           numericInput("collarOffTime",
             label = "Month that collars fall off",
             value = obs_defaults$collarOffTime, min = 1, max = 12
+          ),
+          numericInput("assessmentYrs",
+                       label = "Number of years over which to assess lambda (growth rate)",
+                       value = 1, min = 1, max = 5
           )
         ),
         # Priors ------------------------------------------------
@@ -354,7 +358,6 @@ $( document ).ready(function() {
             tabPanel("Adult female survival", plotOutput("plot1")),
             tabPanel("Population growth rate", plotOutput("plot4")),
             tabPanel("Female population size", plotOutput("plot5")),
-            tabPanel("Female recruitment", plotOutput("plot3")),
             tabPanel("Recruitment KS Distance", plotOutput("plot8")),
             tabPanel("Adult female survival KS Distance", plotOutput("plot7")),
             tabPanel("Population growth rate KS Distance", plotOutput("plot9"))
@@ -553,7 +556,7 @@ $( document ).ready(function() {
         rQuantile = input$rQuantile, sQuantile = input$sQuantile, N0 = input$N0,
         startYear = startYear, adjustR = input$adjustR,
         cowMult = input$cowMult, collarCount = input$collarCount,
-        collarInterval = input$collarInterval
+        collarInterval = input$collarInterval,assessmentYrs=input$assessmentYrs
       )
 
 
@@ -713,11 +716,6 @@ $( document ).ready(function() {
     # Recruitment
     output$plot2 <- renderPlot({
       plotRes(modTables(), "Recruitment", lowBound=0)
-    })
-
-    # Female-only Recruitment
-    output$plot3 <- renderPlot({
-      plotRes(modTables(), "Female-only recruitment")
     })
 
     # lambda
