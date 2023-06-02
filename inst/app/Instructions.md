@@ -4,7 +4,7 @@
 
 This tool is designed to allow users to explore the impacts of various factors that affect projections of caribou population dynamics using the Johnson et al. (2020) national models as a starting point.
 
-A Bayesian model is fit that uses the national model as the priors and is updated based on a simulated observed data set. 
+A Bayesian model is fit that uses the national model as the priors and is updated based on a simulated observed data set. See the [caribouMetrics](https://landscitech.github.io/caribouMetrics/) package and the [Bayesian Demographic Projection](https://landscitech.github.io/caribouMetrics/articles/BayesianDemographicProjection.html) vignette for a detailed description of the model. 
 
 
 ## Inputs
