@@ -4,7 +4,7 @@
 
 This tool is designed to allow users to explore the impacts of various factors that affect projections of caribou population dynamics using the Johnson et al. (2020) national models as a starting point.
 
-A Bayesian model is fit that uses the national model as the priors and is updated based on a simulated observed data set. 
+A Bayesian model is fit that uses the national model as the priors and is updated based on a simulated observed data set. See the [caribouMetrics](https://landscitech.github.io/caribouMetrics/) package and the [Bayesian Demographic Projection](https://landscitech.github.io/caribouMetrics/articles/BayesianDemographicProjection.html) vignette for a detailed description of the model. 
 
 
 ## Inputs
@@ -41,11 +41,12 @@ These parameters define the population that simulated observations will be sampl
 
 These parameters define the assumptions made about the sampling strategies used to collect observations. These affect the amount of data behind survival and recruitment observations for each year and therefore the amount of weight they are given in the model.
 
-1. **Number of cows in aerial surveys for calf:cow ratio each year** 
-2. **Number of collars deployed each year**
-3. **Number of years until collar falls off**
-4. **Month that collars are deployed**. A number from 1 (January) to 12 (December)
-5. **Month that collars fall off** A number from 1 (January) to 12 (December)
+1. **Target number of collars**
+2. **Number of years between collar deployments**
+3. **Number of cows per collared cow in aerial surveys for calf:cow ratio each year**
+2. **Number of years until collar falls off**
+3. **Month that collars are deployed**. A number from 1 (January) to 12 (December)
+4. **Month that collars fall off**. A number from 1 (January) to 12 (December)
 
 ### Model priors 
 
