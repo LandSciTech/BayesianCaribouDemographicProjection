@@ -196,12 +196,24 @@ $( document ).ready(function() {
           numericInput("assessmentYrs",
                        label = "Number of years over which to assess lambda (growth rate)",
                        value = 1, min = 1, max = 5
-          )
+          ),
+          sliderInput(
+            inputId = "qRange", label = "Ratio of bulls to cows in composition survey groups.",
+            value = c(scn_defaults$qMin,scn_defaults$qMax), min = 0, max = 1
+          ),
+        sliderInput(
+          inputId = "uRange", label = "Probability of misidentifying adult sex in composition survey.",
+          value = c(scn_defaults$uMin,scn_defaults$uMax), min = 0, max = 1
+          ),
+        sliderInput(
+          inputId = "zRange", label = "Probability of missing calves in composition survey.",
+          value = c(scn_defaults$zMin,scn_defaults$zMax), min = 0, max = 1
+          ),
+        checkboxInput("redoSimsNational", "Update cached national simulations.", value = 0)
         ),
         # Priors ------------------------------------------------
         menuItem(
           "Model priors",
-          checkboxInput("redoSimsNational", "Update cached national simulations.", value = 0),
           selectInput("nat_model",
             label = "National version model to use",
             choices = c("default", "custom"),
@@ -529,7 +541,10 @@ $( document ).ready(function() {
 
       if(input$redoSimsNational){
         getSimsNational(adjustR = input$adjustR, forceUpdate = T,
-                        fire_excl_anthro = input$iF)
+                        fire_excl_anthro = input$iFire,cPars=list(cowMult=input$cowMult,
+                                                               qMin = input$qRange[1],qMax=input$qRange[2],
+                                                               uMin = input$uRange[1],uMax=input$uRange[2],
+                                                               zMin = input$zRange[1],zMax=input$zRange[2]))
       } else {
         getSimsNational(adjustR = input$adjustR)
       }
@@ -556,9 +571,11 @@ $( document ).ready(function() {
         rQuantile = input$rQuantile, sQuantile = input$sQuantile, N0 = input$N0,
         startYear = startYear, adjustR = input$adjustR,
         cowMult = input$cowMult, collarCount = input$collarCount,
-        collarInterval = input$collarInterval,assessmentYrs=input$assessmentYrs
+        collarInterval = input$collarInterval,assessmentYrs=input$assessmentYrs,
+        qMin = input$qRange[1],qMax=input$qRange[2],
+        uMin = input$uRange[1],uMax=input$uRange[2],
+        zMin = input$zRange[1],zMax=input$zRange[2]
       )
-
 
       scns <- getScenarioDefaults(scns)
 
