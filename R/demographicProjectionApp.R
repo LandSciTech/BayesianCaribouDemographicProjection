@@ -367,6 +367,7 @@ $( document ).ready(function() {
             id = "graphPanel",
             tabPanel("Disturbance", plotOutput("plot6")),
             tabPanel("Recruitment", plotOutput("plot2")),
+            tabPanel("Adjusted recruitment", plotOutput("plot3")),
             tabPanel("Adult female survival", plotOutput("plot1")),
             tabPanel("Population growth rate", plotOutput("plot4")),
             tabPanel("Female population size", plotOutput("plot5")),
@@ -382,7 +383,7 @@ $( document ).ready(function() {
             tabPanel("Summary", dataTableOutput("table")),
             tabPanel("Adult female survival", tableOutput("table2")),
             tabPanel("Recruitment", tableOutput("table3")),
-            tabPanel("Female recruitment", tableOutput("table4")),
+            tabPanel("Adjusted recruitment", tableOutput("table4")),
             tabPanel("Population growth rate", tableOutput("table5")),
             tabPanel("Female population size", tableOutput("table7")),
             tabPanel("JAGS output", dataTableOutput("table6"))
@@ -734,6 +735,11 @@ $( document ).ready(function() {
     output$plot2 <- renderPlot({
       plotRes(modTables(), "Recruitment", lowBound=0)
     })
+
+    output$plot3 <- renderPlot({
+      plotRes(modTables(), "Female-only recruitment", lowBound=0)
+    })
+
 
     # lambda
     output$plot4 <- renderPlot({
