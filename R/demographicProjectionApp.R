@@ -144,7 +144,6 @@ $( document ).ready(function() {
         # True pop ---------------------------
         menuItem(
           "True population parameters",
-          checkboxInput("adjustR", "Adjust R to account for delayed age at first reproduction", value = scn_defaults$adjustR),
           numericInput("N0",
             label = "Initial population size",
             value = scn_defaults$N0, min = 0
@@ -179,7 +178,7 @@ $( document ).ready(function() {
           ),
           numericInput("cowMult",
             label = "Number of cows per collared cow in aerial surveys for calf:cow ratio each year",
-            value = obs_defaults$cowMult, min = 0
+            value = obs_defaults$cowMult, min = 1
           ),
           numericInput("collarNumYears",
             label = "Number of years until collar falls off",
@@ -207,8 +206,9 @@ $( document ).ready(function() {
           ),
         sliderInput(
           inputId = "zRange", label = "Probability of missing calves in composition survey.",
-          value = c(scn_defaults$zMin,scn_defaults$zMax), min = 0, max = 1
+          value = c(scn_defaults$zMin,scn_defaults$zMax), min = 0, max = 0.99
           ),
+        checkboxInput("adjustR", "Adjust R to account for delayed age at first reproduction", value = scn_defaults$adjustR),
         checkboxInput("redoSimsNational", "Update cached national simulations.", value = 0)
         ),
         # Priors ------------------------------------------------
@@ -607,7 +607,7 @@ $( document ).ready(function() {
       )
 
       betaPriors <- getPriors(
-        modList = isolate(reactiveValuesToList(input)),
+        modList = c(scns,isolate(reactiveValuesToList(input))),
         populationGrowthTable = popGrow_df2
       )
 
