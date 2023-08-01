@@ -737,7 +737,7 @@ $( document ).ready(function() {
     })
 
     output$plot3 <- renderPlot({
-      plotRes(modTables(), "Female-only recruitment", lowBound=0)
+      plotRes(modTables(), "Adjusted recruitment", lowBound=0)
     })
 
 
