@@ -170,7 +170,7 @@ $( document ).ready(function() {
           "Observation model parameters",
           numericInput("collarCount",
             label = "Target number of collars",
-            value = obs_defaults$collarCount, min = 1
+            value = obs_defaults$collarCount, min = 0
           ),
           numericInput("collarInterval",
             label = "Number of years between collar deployments",
@@ -178,7 +178,7 @@ $( document ).ready(function() {
           ),
           numericInput("cowMult",
             label = "Number of cows per collared cow in aerial surveys for calf:cow ratio each year",
-            value = obs_defaults$cowMult, min = 1
+            value = obs_defaults$cowMult, min = 0
           ),
           numericInput("collarNumYears",
             label = "Number of years until collar falls off",
