@@ -23,7 +23,7 @@ test_that("app starts and runs with defaults", {
   app$set_inputs(Run.model = "click")
 
   app$set_inputs(graphPanel = "Female population size")
-  app$set_inputs(graphPanel = "Female recruitment")
+  app$set_inputs(graphPanel = "Adjusted recruitment")
   app$set_inputs(graphPanel = "Adult female survival")
   app$set_inputs(graphPanel = "Population growth rate")
   app$set_inputs(graphPanel = "Recruitment")
@@ -46,6 +46,7 @@ test_that("app starts and runs KS calculated", {
   app$set_inputs(Run.model = "click")
 
   app$set_inputs(graphPanel = "Recruitment")
+  app$set_inputs(graphPanel = "Adjusted recruitment")
   app$set_inputs(graphPanel = "Adult female survival")
   app$set_inputs(graphPanel = "Recruitment Kolmogorov-Smirnov Distance")
   app$set_inputs(graphPanel = "Adult female survival Kolmogorov-Smirnov Distance")

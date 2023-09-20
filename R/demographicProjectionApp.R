@@ -144,7 +144,6 @@ $( document ).ready(function() {
         # True pop ---------------------------
         menuItem(
           "True population parameters",
-          checkboxInput("adjustR", "Adjust R to account for delayed age at first reproduction", value = scn_defaults$adjustR),
           numericInput("N0",
             label = "Initial population size",
             value = scn_defaults$N0, min = 0
@@ -171,7 +170,7 @@ $( document ).ready(function() {
           "Observation model parameters",
           numericInput("collarCount",
             label = "Target number of collars",
-            value = obs_defaults$collarCount, min = 1
+            value = obs_defaults$collarCount, min = 0
           ),
           numericInput("collarInterval",
             label = "Number of years between collar deployments",
@@ -196,12 +195,25 @@ $( document ).ready(function() {
           numericInput("assessmentYrs",
                        label = "Number of years over which to assess lambda (growth rate)",
                        value = 1, min = 1, max = 5
-          )
+          ),
+          sliderInput(
+            inputId = "qRange", label = "Ratio of bulls to cows in composition survey groups.",
+            value = c(scn_defaults$qMin,scn_defaults$qMax), min = 0, max = 1
+          ),
+        sliderInput(
+          inputId = "uRange", label = "Probability of misidentifying adult sex in composition survey.",
+          value = c(scn_defaults$uMin,scn_defaults$uMax), min = 0, max = 1
+          ),
+        sliderInput(
+          inputId = "zRange", label = "Probability of missing calves in composition survey.",
+          value = c(scn_defaults$zMin,scn_defaults$zMax), min = 0, max = 0.99
+          ),
+        checkboxInput("adjustR", "Adjust R to account for delayed age at first reproduction", value = scn_defaults$adjustR),
+        checkboxInput("redoSimsNational", "Update cached national simulations.", value = 0)
         ),
         # Priors ------------------------------------------------
         menuItem(
           "Model priors",
-          checkboxInput("redoSimsNational", "Update cached national simulations.", value = 0),
           selectInput("nat_model",
             label = "National version model to use",
             choices = c("default", "custom"),
@@ -355,6 +367,7 @@ $( document ).ready(function() {
             id = "graphPanel",
             tabPanel("Disturbance", plotOutput("plot6")),
             tabPanel("Recruitment", plotOutput("plot2")),
+            tabPanel("Adjusted recruitment", plotOutput("plot3")),
             tabPanel("Adult female survival", plotOutput("plot1")),
             tabPanel("Population growth rate", plotOutput("plot4")),
             tabPanel("Female population size", plotOutput("plot5")),
@@ -370,7 +383,7 @@ $( document ).ready(function() {
             tabPanel("Summary", dataTableOutput("table")),
             tabPanel("Adult female survival", tableOutput("table2")),
             tabPanel("Recruitment", tableOutput("table3")),
-            tabPanel("Female recruitment", tableOutput("table4")),
+            tabPanel("Adjusted recruitment", tableOutput("table4")),
             tabPanel("Population growth rate", tableOutput("table5")),
             tabPanel("Female population size", tableOutput("table7")),
             tabPanel("JAGS output", dataTableOutput("table6"))
@@ -529,7 +542,10 @@ $( document ).ready(function() {
 
       if(input$redoSimsNational){
         getSimsNational(adjustR = input$adjustR, forceUpdate = T,
-                        fire_excl_anthro = input$iF)
+                        fire_excl_anthro = input$iFire,cPars=list(cowMult=input$cowMult,
+                                                               qMin = input$qRange[1],qMax=input$qRange[2],
+                                                               uMin = input$uRange[1],uMax=input$uRange[2],
+                                                               zMin = input$zRange[1],zMax=input$zRange[2]))
       } else {
         getSimsNational(adjustR = input$adjustR)
       }
@@ -556,9 +572,11 @@ $( document ).ready(function() {
         rQuantile = input$rQuantile, sQuantile = input$sQuantile, N0 = input$N0,
         startYear = startYear, adjustR = input$adjustR,
         cowMult = input$cowMult, collarCount = input$collarCount,
-        collarInterval = input$collarInterval,assessmentYrs=input$assessmentYrs
+        collarInterval = input$collarInterval,assessmentYrs=input$assessmentYrs,
+        qMin = input$qRange[1],qMax=input$qRange[2],
+        uMin = input$uRange[1],uMax=input$uRange[2],
+        zMin = input$zRange[1],zMax=input$zRange[2]
       )
-
 
       scns <- getScenarioDefaults(scns)
 
@@ -589,7 +607,7 @@ $( document ).ready(function() {
       )
 
       betaPriors <- getPriors(
-        modList = isolate(reactiveValuesToList(input)),
+        modList = c(scns,isolate(reactiveValuesToList(input))),
         populationGrowthTable = popGrow_df2
       )
 
@@ -717,6 +735,11 @@ $( document ).ready(function() {
     output$plot2 <- renderPlot({
       plotRes(modTables(), "Recruitment", lowBound=0)
     })
+
+    output$plot3 <- renderPlot({
+      plotRes(modTables(), "Adjusted recruitment", lowBound=0)
+    })
+
 
     # lambda
     output$plot4 <- renderPlot({
