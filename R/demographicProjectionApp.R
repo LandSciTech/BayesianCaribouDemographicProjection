@@ -260,24 +260,24 @@ $( document ).ready(function() {
             value = prior_defaults$rIntSEMod, min = 1, max = 10
           ),
           sliderInput(
-            inputId = "sInterannualVar",
+            inputId = "sSigmaMean",
             label = "Interannual coefficient of variation for survival",
-            value = prior_defaults$sInterannualVar, min = 0, max = 1
+            value = prior_defaults$sSigmaMean, min = 0, max = 1
           ),
           sliderInput(
-            inputId = "sInterannualVarSE",
+            inputId = "sSigmaSD",
             label = "Uncertainty around interannual coefficient of variation for survival",
-            value = prior_defaults$sInterannualVarSE, min = 0, max = 1
+            value = prior_defaults$sSigmaSD, min = 0, max = 1
           ),
           sliderInput(
-            inputId = "rInterannualVar",
+            inputId = "rSigmaMean",
             label = "Interannual coefficient of variation for recruitment",
-            value = prior_defaults$rInterannualVar, min = 0, max = 1
+            value = prior_defaults$rSigmaMean, min = 0, max = 1
           ),
           sliderInput(
-            inputId = "rInterannualVarSE",
+            inputId = "rSigmaSD",
             label = "Uncertainty around interannual coefficient of variation for recruitment",
-            value = prior_defaults$rInterannualVarSE, min = 0, max = 1
+            value = prior_defaults$rSigmaSD, min = 0, max = 1
           )
         ),
 
