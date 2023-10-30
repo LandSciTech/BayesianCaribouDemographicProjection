@@ -22,37 +22,7 @@ demographicProjectionApp <- function(n = 1000) {
   getSimsNational(adjustR = T)
   getSimsNational(adjustR = F)
 
-  # get default values to use in initializing parameters in ui
-  # Disturbance scenario parameters
-  # P: num obs years
-  # J: num projection years
-  # aS: % increase in anthropogenic disturbance per year in observation period
-  # aSf: % increase in anthropogenic disturbanc per year in projection period
-  # iA: initial anthro disturbance
-  # iF: initial fire - for now, no change in fire over time.
-  # Or, if disturbance csv scenario provided, ignore all these setting and get values from file.
-
-  # True population parameters
-  # N0: intial population size
-  # rQ: recruitment quantile
-  # sQ: survival quantile
-  # rS: disturbance-recruitment slope multiplier
-  # sS: disturbance-survival slope multiplier
-  # adjustR: Adjust R to account for delayed age at first reproduction (DeCesare et al. 2012; Eacker et al. 2019) or not.
-  # In theory, could expose any parameter from caribouMetrics projection tool here. Leave simple for now.
-
-  # Obs model parameters
-  # st: target number of collars per year
-  # ri: renewal interval
-
   scn_defaults <- eval(formals(getScenarioDefaults))
-
-  # Observation model parameters
-  # cowsPerYear: number of cows in aerial surval for calf:cow ratio each year.
-  # startsPerYear: # collars deployed each year
-  # collarNumYears: years before each collar falls off
-  # collarOnTime: month that collars are deployed
-  # collarOffTime: month that collars fall off
 
   # defaults set to be uninformative
   obs_defaults <- list(
@@ -60,16 +30,6 @@ demographicProjectionApp <- function(n = 1000) {
     collarOnTime = 1, collarOffTime = 12
   )
 
-  # Priors - see getPriors() for details & defaults
-  # Allow possibility of a different parameter table instead of caribouMetrics::popGrowthTableJohnsonECCC. But don't allow different covariates. For now, recruitment model must have anthro and fire_excl_anthro covariates, and survival model must have anthro covariate. Intercept and slope parameters must be specified for each.
-  # bse: anthro slope survival uncertainty multiplier. 1 - 10
-  # bre: anthro slope recruitment uncertainty multiplier. 1 - 10
-  # lse: survival intercept uncertainty multiplier. 1 - 10
-  # lre: recruitment intercept uncertainty multiplier. 1 - 10
-  # sse: interannual coefficient of variation for survival. 0-1. See popGrowthJohnson() and functions therein for details
-  # ssv: uncertainty about interannual variation in survival. 0-1
-  # sre: interannual coefficient of variation for recruitment. 0-1
-  # srv: uncertainty about interannual variation in recruitment. 0-1.
   prior_defaults <- lapply(formals(getPriors), eval)
 
   # JAGS params
@@ -86,7 +46,8 @@ $( document ).ready(function() {
   # UI  -------------------------------------
   ui <- dashboardPage(
     # Application title
-    dashboardHeader(title = "Woodland Caribou Demographic Estimates"),
+    dashboardHeader(title = "Boreal Caribou Demographic Projection Informed by Local Monitoring & National Demographic-Disturbance Relationships",
+                    titleWidth = 1150),
 
     # Sidebar --------------------------------------------------------------------
     dashboardSidebar(
@@ -253,22 +214,22 @@ $( document ).ready(function() {
           ),
           sliderInput(
             inputId = "sAnthroSlopeSEMod",
-            label = "Multiplier for uncertainty of effect of disturbance on survival",
+            label = "Multiplier for uncertainty about effect of disturbance on survival",
             value = prior_defaults$sAnthroSlopeSEMod, min = 1, max = 10
           ),
           sliderInput(
             inputId = "rAnthroSlopeSEMod",
-            label = "Multiplier for uncertainty of effect of disturbance on recruitment",
+            label = "Multiplier for uncertainty about effect of disturbance on recruitment",
             value = prior_defaults$rAnthroSlopeSEMod, min = 1, max = 10
           ),
           sliderInput(
             inputId = "sIntSEMod",
-            label = "Multiplier for uncertainty of survival intercept",
+            label = "Multiplier for uncertainty about survival intercept",
             value = prior_defaults$sIntSEMod, min = 1, max = 10
           ),
           sliderInput(
             inputId = "rIntSEMod",
-            label = "Multiplier for uncertainty of recruitment intercept",
+            label = "Multiplier for uncertainty about recruitment intercept",
             value = prior_defaults$rIntSEMod, min = 1, max = 10
           ),
           sliderInput(
@@ -278,7 +239,7 @@ $( document ).ready(function() {
           ),
           sliderInput(
             inputId = "sSigmaSD",
-            label = "Uncertainty around interannual coefficient of variation for survival",
+            label = "Uncertainty about the interannual coefficient of variation for survival",
             value = prior_defaults$sSigmaSD, min = 0, max = 1
           ),
           sliderInput(
@@ -288,7 +249,7 @@ $( document ).ready(function() {
           ),
           sliderInput(
             inputId = "rSigmaSD",
-            label = "Uncertainty around interannual coefficient of variation for recruitment",
+            label = "Uncertainty about the interannual coefficient of variation for recruitment",
             value = prior_defaults$rSigmaSD, min = 0, max = 1
           )
         ),
@@ -357,9 +318,10 @@ $( document ).ready(function() {
         title = "",
         tabPanel(
           "Instructions",
-          includeMarkdown(system.file("app/Instructions.md",
-            package = "BayesianCaribouDemographicProjection"
-          ))
+
+          withMathJax(includeMarkdown(system.file("app/Instructions.Rmd",
+                                          package = "BayesianCaribouDemographicProjection"
+          )))
         ),
         tabPanel(
           "Graphical summary",
@@ -746,9 +708,11 @@ $( document ).ready(function() {
       plotRes(modTables(), "Population growth rate", lowBound=0)
     })
 
-    # lambda
+    # size
     output$plot5 <- renderPlot({
-      plotRes(modTables(), "Female population size", lowBound=0)
+      temp = modTables()
+      temp$sim.all <- NULL
+      plotRes(temp, "Female population size", lowBound=0)
     })
 
     output$plot6 <- renderPlot({
