@@ -213,44 +213,44 @@ $( document ).ready(function() {
             )
           ),
           sliderInput(
-            inputId = "sAnthroSlopeSEMod",
-            label = "Multiplier for uncertainty about effect of disturbance on survival",
-            value = prior_defaults$sAnthroSlopeSEMod, min = 1, max = 10
+            inputId = "sAnthroSlopeSE",
+            label = "Standard deviation of the effect of disturbance on survival",
+            value = prior_defaults$sAnthroSlopeSE, min = 0, max = 0.002
           ),
           sliderInput(
-            inputId = "rAnthroSlopeSEMod",
-            label = "Multiplier for uncertainty about effect of disturbance on recruitment",
-            value = prior_defaults$rAnthroSlopeSEMod, min = 1, max = 10
+            inputId = "rAnthroSlopeSE",
+            label = "Standard deviation of the effect of disturbance on recruitment",
+            value = prior_defaults$rAnthroSlopeSE, min = 0, max = 0.02
           ),
           sliderInput(
-            inputId = "sIntSEMod",
-            label = "Multiplier for uncertainty about survival intercept",
-            value = prior_defaults$sIntSEMod, min = 1, max = 10
+            inputId = "sIntSE",
+            label = "Standard deviation of the survival intercept",
+            value = prior_defaults$sIntSE, min = 0, max = 0.5
           ),
           sliderInput(
-            inputId = "rIntSEMod",
-            label = "Multiplier for uncertainty about recruitment intercept",
-            value = prior_defaults$rIntSEMod, min = 1, max = 10
+            inputId = "rIntSE",
+            label = "Standard deviation of the recruitment intercept",
+            value = prior_defaults$rIntSE, min = 0, max = 0.5
           ),
           sliderInput(
-            inputId = "sSigmaMean",
-            label = "Interannual coefficient of variation for survival",
-            value = prior_defaults$sSigmaMean, min = 0, max = 1
+            inputId = "sSigmaMin",
+            label = "Min of uniform hyperprior for random effect of year on survival",
+            value = prior_defaults$sSigmaMin, min = 0.00001, max = 1
           ),
           sliderInput(
-            inputId = "sSigmaSD",
-            label = "Uncertainty about the interannual coefficient of variation for survival",
-            value = prior_defaults$sSigmaSD, min = 0, max = 1
+            inputId = "sSigmaMax",
+            label = "Max of uniform hyperprior for random effect of year on survival",
+            value = prior_defaults$sSigmaMax, min = 0.00002, max = 1
           ),
           sliderInput(
-            inputId = "rSigmaMean",
-            label = "Interannual coefficient of variation for recruitment",
-            value = prior_defaults$rSigmaMean, min = 0, max = 1
+            inputId = "rSigmaMin",
+            label = "Min of uniform hyperprior for random effect of year on recruitment",
+            value = prior_defaults$rSigmaMin, min = 0.00001, max = 1
           ),
           sliderInput(
-            inputId = "rSigmaSD",
-            label = "Uncertainty about the interannual coefficient of variation for recruitment",
-            value = prior_defaults$rSigmaSD, min = 0, max = 1
+            inputId = "rSigmaMax",
+            label = "Max of uniform hyperprior for random effect of year on recruitment",
+            value = prior_defaults$rSigmaMax, min = 0.00002, max = 1
           )
         ),
 
