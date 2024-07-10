@@ -73,7 +73,7 @@ demographicProjectionApp <- function(n = 1000) {
   prior_defaults <- lapply(formals(getPriors), eval)
 
   # JAGS params
-  jags_defaults <- eval(formals(caribouBayesianIPM)[c("Niter", "Nchains", "Nthin", "Nburn")])
+  jags_defaults <- eval(formals(caribouBayesianPM)[c("Niter", "Nchains", "Nthin", "Nburn")])
 
   # add JavaScript to add an id to the <section> tag
   # so we can overlay waiter on top of it
@@ -611,7 +611,7 @@ $( document ).ready(function() {
         populationGrowthTable = popGrow_df2
       )
 
-      out <- caribouBayesianIPM(
+      out <- caribouBayesianPM(
         survData = oo$simSurvObs, ageRatio = oo$ageRatioOut,
         disturbance = oo$simDisturbance, betaPriors = betaPriors,
         startYear = startYear, endYear = endYear,
