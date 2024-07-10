@@ -1,11 +1,15 @@
-# Instructions for using the app
+---
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+    bookdown::html_document2:
+      number_sections: no
+editor_options: 
+  chunk_output_type: inline
+---
 
 ## Overview
 
-This tool is designed to allow users to explore the impacts of various factors that affect projections of caribou population dynamics using the Johnson et al. (2020) national models as a starting point.
-
-A Bayesian model is fit that uses the national model as the priors and is updated based on a simulated observed data set. See the [caribouMetrics](https://landscitech.github.io/caribouMetrics/) package and the [Bayesian Demographic Projection](https://landscitech.github.io/caribouMetrics/articles/BayesianDemographicProjection.html) vignette for a detailed description of the model. 
-
+Across fifty-eight boreal caribou ranges in Canada, both survival and recruitment decrease with the percentage of the range that is disturbed ([Johnson et al. 2020](https://doi.org/10.1111/1365-2664.13637)). However, there is also variation in demographic rates among ranges, particularly where anthropogenic disturbance is low, and this variation leads to uncertainty in projections derived from national disturbance-demographic relationships ([Stewart et al. 2023](https://doi.org/10.1002/eap.2816); [Dyson et al. 2022](https://doi.org/10.1101/2022.06.01.494350)). Demographic projections derived from local range-specific data are also uncertain because few places have enough long-term monitoring data to characterize local demographic-disturbance relationships. We present a simple Bayesian population model that integrates prior information from national analysis of demographic-disturbance relationships with available local demographic data to reduce uncertainty in population viability projections. We combine this model with methods for simulating local population dynamics and monitoring to show how monitoring requirements depend on landscape condition. This interface is designed to allow exploration of user-specified monitoring and disturbance scenarios. See the [caribouMetrics](https://landscitech.github.io/caribouMetrics/) package and the [Bayesian Demographic Projection](https://landscitech.github.io/caribouMetrics/articles/BayesianDemographicProjection.html) vignette for more detailed descriptions of the models and methods. 
 
 ## Inputs
 
@@ -13,7 +17,7 @@ The model can be run with a simulated disturbance scenario and default values fo
 
 ### Scenario
 
-The simulation scenario can be defined using either a csv file or several parameters that are used to generate a scenario. 
+The timeline for monitoring and projection, and change in anthropogenic disturbance over that period can be defined using either a csv file or several parameters that are used to generate a scenario. 
 
 #### Scenario csv file
 
@@ -37,9 +41,9 @@ These parameters define the population that simulated observations will be sampl
 3. The **Multipliers for the effect of disturbance on recruitment/survival** are used to adjust the coefficients from the national model. Setting a value of 0 assumes that disturbance has no effect on recruitment/survival, while a value of 2 would double the effect of disturbance compared to the national model.
 
 
-### Observation data parameters
+### Observation model parameters
 
-These parameters define the assumptions made about the sampling strategies used to collect observations. These affect the amount of data behind survival and recruitment observations for each year and therefore the amount of weight they are given in the model.
+These parameters define a local caribou population monitoring program that includes collaring of adult females and aerial recruitment surveys. Increasing the number of collars or the number of cows per collar in recruitment surveys increases the amount of local data available to inform local parameter estimates and demographic projections.
 
 1. **Target number of collars**
 2. **Number of years between collar deployments**
@@ -51,20 +55,23 @@ These parameters define the assumptions made about the sampling strategies used 
 ### Model priors 
 
 The first choice is which **version of the national model** to use. Johnson et al. 2020 includes 5 different recruitment and survival models the defaults are the best supported models but you can choose a different model number if desired. Note only models that use anthropogenic disturbance and/or fire excluding anthropogenic disturbance are supported at this time. Another option is to provide a csv file with custom coefficients where the column names are "responseVariable", "Coefficient", "Value", "lowerCI", and "upperCI". "responseVariable" must be one of "recruitment" or "femaleSurvival". And "Coefficient" must be one of "Intercept", "Anthro", "fire_excl_anthro" or "Precision". 
-The remaining parameters in this section affect the level of uncertainty around the coefficients from the national model. If uncertainty in the national model is higher then the projections can deviate more from the national model if the observed data does. 
 
-1. **Multiplier for uncertainty of effect of disturbance on survival**
-2. **Multiplier for uncertainty of effect of disturbance on recruitment**
-3. **Multiplier for uncertainty of survival intercept**
-4. **Multiplier for uncertainty of recruitment intercept**
-5. **Interannual coefficient of variation for survival**
-6. **Uncertainty around interannual coefficient of variation for survival**
-7. **Interannual coefficient of variation for recruitment**
-8. **Uncertainty around interannual coefficient of variation for recruitment**
+Higher values of the multiplier parameters in this section increase the vagueness of the priors for ceofficients in the demographic disturbance relationships. Default values are set so that the 95% prior prediction intervals for survival and recruitment from the Bayesian model match the
+range between the 2.5% and 97.5% quantiles of 1000 simulated survival
+and recruitment trajectories from the national demographic model. In other words, priors are set so the Bayesian population model and the national demographic model give comparable results when no local monitoring data is available to help refine parameter estimates.
+
+1. **Multiplier for uncertainty about effect of disturbance on survival $\beta^S_a$**
+2. **Multiplier for uncertainty about effect of disturbance on recruitment $\beta^R_a$**
+3. **Multiplier for uncertainty about survival intercept $\beta^S_0$**
+4. **Multiplier for uncertainty about recruitment intercept $\beta^R_0$**
+5. **Interannual coefficient of variation for survival $\sigma^2_S$**
+6. **Uncertainty about the interannual coefficient of variation for survival $\sigma^2_S$**
+7. **Interannual coefficient of variation for recruitment $\sigma^2_R$**
+8. **Uncertainty about the interannual coefficient of variation for recruitment $\sigma^2_R$**
 
 ### Baysian model parameters
 
-These parameters affect the fitting of the Bayesian model used to make predictions.
+These parameters can be adjusted to ensure convergence of the Markov Chain Monte Carlo estimation algorithm for the Bayesian population model.
 
 1. **Number of chains**
 2. **Number of iterations**
@@ -73,7 +80,7 @@ These parameters affect the fitting of the Bayesian model used to make predictio
 
 ## Outputs
 
-Running the model can take some time, see the R console for details on the model progress. 
+Running the model can take some time. See the R console for details on the model progress. 
 
 Once the model is finished the results graphs and tables tabs will be populated. You can also view the MCMC diagnostic plots in a new window by clicking **Open MCMC diagnostic plots**. This will also take some time with progress shown in the R console. 
 
