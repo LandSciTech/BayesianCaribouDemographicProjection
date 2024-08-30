@@ -155,7 +155,7 @@ $( document ).ready(function() {
           ),
           numericInput("assessmentYrs",
                        label = "Number of years over which to assess lambda (growth rate)",
-                       value = 1, min = 1, max = 5
+                       value = 3, min = 1, max = 5
           ),
           sliderInput(
             inputId = "qRange", label = "Ratio of bulls to cows in composition survey groups.",
@@ -233,24 +233,24 @@ $( document ).ready(function() {
             value = prior_defaults$rIntSE, min = 0, max = 0.5
           ),
           sliderInput(
-            inputId = "sSigmaMin",
-            label = "Min of uniform hyperprior for random effect of year on survival",
-            value = prior_defaults$sSigmaMin, min = 0.00001, max = 1
+            inputId = "sNuMin",
+            label = "Min of uniform prior for coefficient of variation in survival among years",
+            value = prior_defaults$sNuMin, min = 0.01, max = 1
           ),
           sliderInput(
-            inputId = "sSigmaMax",
-            label = "Max of uniform hyperprior for random effect of year on survival",
-            value = prior_defaults$sSigmaMax, min = 0.00002, max = 1
+            inputId = "sNuMax",
+            label = "Max of uniform prior for coefficient of variation in survival among years",
+            value = prior_defaults$sNuMax, min = 0.02, max = 1
           ),
           sliderInput(
-            inputId = "rSigmaMin",
-            label = "Min of uniform hyperprior for random effect of year on recruitment",
-            value = prior_defaults$rSigmaMin, min = 0.00001, max = 1
+            inputId = "rNuMin",
+            label = "Min of uniform prior for coefficient of variation in recruitment among years",
+            value = prior_defaults$rNuMin, min = 0.01, max = 1
           ),
           sliderInput(
-            inputId = "rSigmaMax",
-            label = "Max of uniform hyperprior for random effect of year on recruitment",
-            value = prior_defaults$rSigmaMax, min = 0.00002, max = 1
+            inputId = "rNuMax",
+            label = "Max of uniform prior for coefficient of variation in recruitment among years",
+            value = prior_defaults$rNuMax, min = 0.02, max = 1
           )
         ),
 
@@ -507,7 +507,8 @@ $( document ).ready(function() {
                         fire_excl_anthro = input$iFire,cPars=list(cowMult=input$cowMult,
                                                                qMin = input$qRange[1],qMax=input$qRange[2],
                                                                uMin = input$uRange[1],uMax=input$uRange[2],
-                                                               zMin = input$zRange[1],zMax=input$zRange[2]))
+                                                               zMin = input$zRange[1],zMax=input$zRange[2],
+                                                               assessmentYrs=input$assessmentYrs))
       } else {
         getSimsNational(adjustR = input$adjustR)
       }
