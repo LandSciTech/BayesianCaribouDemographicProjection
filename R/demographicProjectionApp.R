@@ -19,8 +19,7 @@ demographicProjectionApp <- function(n = 1000) {
 
   ##########
   # Get full set of sims for comparison, the results are cached
-  getSimsNational(adjustR = T)
-  getSimsNational(adjustR = F)
+  getSimsNational()
 
   scn_defaults <- eval(formals(getScenarioDefaults))
 
@@ -169,7 +168,6 @@ $( document ).ready(function() {
           inputId = "zRange", label = "Probability of missing calves in composition survey.",
           value = c(scn_defaults$zMin,scn_defaults$zMax), min = 0, max = 0.99
           ),
-        checkboxInput("adjustR", "Adjust R to account for delayed age at first reproduction", value = scn_defaults$adjustR),
         checkboxInput("redoSimsNational", "Update cached national simulations.", value = 0)
         ),
         # Priors ------------------------------------------------
@@ -503,14 +501,14 @@ $( document ).ready(function() {
       on.exit(waiter$hide())
 
       if(input$redoSimsNational){
-        getSimsNational(adjustR = input$adjustR, forceUpdate = T,
+        getSimsNational(forceUpdate = T,
                         fire_excl_anthro = input$iFire,cPars=list(cowMult=input$cowMult,
                                                                qMin = input$qRange[1],qMax=input$qRange[2],
                                                                uMin = input$uRange[1],uMax=input$uRange[2],
                                                                zMin = input$zRange[1],zMax=input$zRange[2],
                                                                assessmentYrs=input$assessmentYrs))
       } else {
-        getSimsNational(adjustR = input$adjustR)
+        getSimsNational()
       }
     })
 
@@ -533,7 +531,7 @@ $( document ).ready(function() {
         obsAnthroSlope = input$obsAnthroSlope, projAnthroSlope = input$projAnthroSlope, rSlopeMod = input$rSlopeMod,
         sSlopeMod = input$sSlopeMod, iAnthro = input$iAnthro, iFire = input$iFire,
         rQuantile = input$rQuantile, sQuantile = input$sQuantile, N0 = input$N0,
-        startYear = startYear, adjustR = input$adjustR,
+        startYear = startYear,
         cowMult = input$cowMult, collarCount = input$collarCount,
         collarInterval = input$collarInterval,assessmentYrs=input$assessmentYrs,
         qMin = input$qRange[1],qMax=input$qRange[2],

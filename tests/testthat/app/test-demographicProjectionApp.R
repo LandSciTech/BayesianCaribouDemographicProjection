@@ -40,7 +40,6 @@ test_that("app starts and runs KS calculated", {
   app$set_inputs(Nchains = 1, Niter = 100, Nburn = 10,
                  Nthin = 2)
 
-  app$set_inputs(adjustR = TRUE)
   app$set_inputs(getKSDists = TRUE)
 
   app$set_inputs(Run.model = "click")
